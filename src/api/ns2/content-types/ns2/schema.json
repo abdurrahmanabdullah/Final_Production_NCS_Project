@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ns2s",
+  "info": {
+    "singularName": "ns2",
+    "pluralName": "ns2s",
+    "displayName": "Ns2"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "msg": {
+      "type": "boolean"
+    }
+  }
+}

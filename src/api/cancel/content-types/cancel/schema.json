@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cancels",
+  "info": {
+    "singularName": "cancel",
+    "pluralName": "cancels",
+    "displayName": "cancel"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    }
+  }
+}

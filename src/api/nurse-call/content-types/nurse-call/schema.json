@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nurse_calls",
+  "info": {
+    "singularName": "nurse-call",
+    "pluralName": "nurse-calls",
+    "displayName": "NurseCall",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "msg": {
+      "type": "boolean"
+    }
+
+  }
+}
