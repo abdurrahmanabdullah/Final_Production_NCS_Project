@@ -16,7 +16,12 @@ class HomeController extends GetxController {
   final RxMap<int, bool> notificationSent = <int, bool>{}.obs;
   final RxMap<int, DateTime> startTimes = <int, DateTime>{}.obs;
   final Map<int, Timer> cabinTimers = {};
+  var acceptedStatus = <String, bool>{}.obs; // Tracks if a cabin is accepted
   Timer? _timer;
+
+
+
+  ///------------track nurse click or not
 
   @override
   void onInit() {
@@ -165,6 +170,7 @@ class HomeController extends GetxController {
       payload: {'navigate': 'true'},
     );
   }
+
 
 
 }
