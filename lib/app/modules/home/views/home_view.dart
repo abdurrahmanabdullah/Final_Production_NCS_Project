@@ -131,11 +131,711 @@
 //     );
 //   }
 // }
-///-------------------modification code
+///
+///---------------------modification code
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+//
+// import '../controllers/home_controller.dart';
+//
+// class HomeView extends GetView<HomeController> {
+//   const HomeView({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final HomeController controller = Get.find<HomeController>();
+//
+//     // Track selected cabin
+//     int? selectedCabinId;
+//     int? acceptedCabinId;
+//     int? escalateCabinId;
+//     return SafeArea(
+//       child: Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Scaffold(
+//           appBar: AppBar(
+//             backgroundColor: Colors.white, // Set the background color to black
+//             toolbarHeight: 150,
+//             flexibleSpace: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Image.asset(
+//                   'assets/images/cmh.png',
+//                   height: 148,
+//
+//                    width: MediaQuery.of(context).size.width,
+//                   fit: BoxFit.fill, // Maintain aspect ratio
+//
+//                 ),
+//               ],
+//             ),
+//           ),
+//           body: SafeArea(
+//             child: Container(
+//               color: Colors.grey,
+//               // color: const Color(0xFFebecf0),
+//               // color: const Color(0xFF010101),
+//               child: Obx(() {
+//                 if (controller.isLoading.value) {
+//                   return const Center(child: CircularProgressIndicator());
+//                 } else if (controller.cabins.isEmpty) {
+//                   return const Center(
+//                     child: Text(
+//                       "Waiting for patient to call.",
+//                       style: TextStyle(color: Colors.white),
+//                     ),
+//                   );
+//                 } else {
+//                   return Column(
+//                     children: [
+//                       // ListView to display cabins
+//                       Expanded(
+//                         child: ListView.builder(
+//                           itemCount: controller.cabins.length + 1,
+//                           // Add one for the button row
+//                           itemBuilder: (context, index) {
+//                             if (index < controller.cabins.length) {
+//                               final cabin = controller.cabins[index];
+//                               final waitingTime =
+//                                   controller.waitingTimes[cabin.id] ?? '0:00';
+//                               final timeParts = waitingTime.split(':');
+//                               final minutes = int.parse(timeParts[0]);
+//
+//                               ///--- Determine the background color based on waiting time
+//                               Color waitingTimeColor;
+//                               if (minutes >= 5) {
+//                                 waitingTimeColor =
+//                                     Colors.red; // Red for 5 minutes or more
+//                               } else if (minutes >= 2) {
+//                                 waitingTimeColor =
+//                                     Colors.yellow; // Yellow for 2 to 4 minutes
+//                               } else {
+//                                 waitingTimeColor = Colors
+//                                     .white; // White for less than 2 minutes
+//                               }
+//                               return MouseRegion(
+//                                 onEnter: (_) {
+//                                   selectedCabinId = cabin
+//                                       .id; // Set hover effect for the entire card
+//                                 },
+//                                 onExit: (_) {
+//                                   selectedCabinId =
+//                                   null; // Remove hover effect when the pointer exits
+//                                 },
+//                                 child: GestureDetector(
+//                                   onTap: () {
+//                                     selectedCabinId = cabin.id;
+//                                   },
+//                                   child: Row(
+//                                     children: [
+//                                       // Left-side bar with dynamic color for hover effect
+//                                       Container(
+//                                         width: 20, // Width of the bar
+//                                         height: 73, // Height of the bar
+//                                         color:
+//                                         waitingTimeColor, // Default color
+//                                       ),
+//
+//                                       // Main container
+//                                       Expanded(
+//                                         child: Container(
+//                                           margin:
+//                                           const EdgeInsets.only(top: 2.0),
+//                                           decoration: BoxDecoration(
+//
+//                                             color: selectedCabinId == cabin.id
+//                                                 ? Colors.lightBlueAccent
+//                                             // Highlight background for hover
+//                                                 : const Color(0xFFebecf0),
+//
+//                                             // Default background color
+//                                             border: Border(
+//                                               top: BorderSide(
+//                                                 color: Colors.grey.shade600,
+//                                                 // Top border color
+//                                                 width: 0.8, // Border width
+//                                               ),
+//                                               bottom: BorderSide(
+//                                                 color: Colors.grey.shade600,
+//                                                 // Bottom border color
+//                                                 width: 0.8, // Border width
+//                                               ),
+//                                             ),
+//
+//                                           ),
+//                                           child: ListTile(
+//                                             title: Row(
+//                                               mainAxisAlignment:
+//                                               MainAxisAlignment
+//                                                   .spaceBetween,
+//                                               children: [
+//                                                 // Room and Patient Call Details
+//                                                 Column(
+//                                                   crossAxisAlignment:
+//                                                   CrossAxisAlignment.start,
+//                                                   children: [
+//                                                     Text(
+//                                                       'Cabin ${cabin.id}',
+//                                                       style: const TextStyle(
+//                                                         color: Colors.black,
+//                                                         // Default text color
+//                                                         fontWeight:
+//                                                         FontWeight.bold,
+//                                                         fontSize: 18,
+//                                                       ),
+//                                                     ),
+//                                                     const SizedBox(height: 4),
+//                                                     const Text(
+//                                                       'Patient Call',
+//                                                       style: TextStyle(
+//                                                         color:
+//                                                         Colors.blueAccent,
+//                                                         fontSize: 16,
+//                                                       ),
+//                                                     ),
+//                                                   ],
+//                                                 ),
+//                                                 // Waiting Time and Status
+//                                                 Column(
+//                                                   crossAxisAlignment:
+//                                                   CrossAxisAlignment.end,
+//                                                   children: [
+//                                                     Text(
+//                                                       waitingTime,
+//                                                       style: TextStyle(
+//                                                         color: selectedCabinId ==
+//                                                             cabin.id
+//                                                             ? Colors
+//                                                             .blueAccent // Highlighted text color
+//                                                             : Colors.black54,
+//                                                         // Default text color
+//                                                         fontSize: 16,
+//                                                         fontWeight:
+//                                                         FontWeight.bold,
+//                                                       ),
+//                                                     ),
+//                                                     const SizedBox(height: 4),
+//                                                     Row(
+//                                                       children: [
+//                                                         if (escalateCabinId ==
+//                                                             cabin.id)
+//                                                           Container(
+//                                                             padding:
+//                                                             const EdgeInsets
+//                                                                 .symmetric(
+//                                                               vertical: 2.0,
+//                                                               horizontal: 6.0,
+//                                                             ),
+//                                                             decoration:
+//                                                             BoxDecoration(
+//                                                               color: Colors
+//                                                                   .red.shade100,
+//                                                               borderRadius:
+//                                                               BorderRadius
+//                                                                   .circular(
+//                                                                   4.0),
+//                                                             ),
+//                                                             child: const Text(
+//                                                               "Escalated",
+//                                                               style: TextStyle(
+//                                                                 color:
+//                                                                 Colors.red,
+//                                                                 fontSize: 12,
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                         const SizedBox(
+//                                                             width: 4),
+//                                                         if (acceptedCabinId ==
+//                                                             cabin.id)
+//                                                           Container(
+//                                                             padding:
+//                                                             const EdgeInsets
+//                                                                 .symmetric(
+//                                                               vertical: 2.0,
+//                                                               horizontal: 6.0,
+//                                                             ),
+//                                                             decoration:
+//                                                             BoxDecoration(
+//                                                               color: Colors
+//                                                                   .green
+//                                                                   .shade100,
+//                                                               borderRadius:
+//                                                               BorderRadius
+//                                                                   .circular(
+//                                                                   4.0),
+//                                                             ),
+//                                                             child: const Text(
+//                                                               "Accepted",
+//                                                               style: TextStyle(
+//                                                                 color: Colors
+//                                                                     .green,
+//                                                                 fontSize: 12,
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                       ],
+//                                                     ),
+//                                                   ],
+//                                                 ),
+//                                               ],
+//                                             ),
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                               );
+//                             } else {
+//                               // This is the last item (the row with buttons)
+//                               return selectedCabinId != null
+//                                   ? Row(
+//                                 children: [
+//                                   // Container to show waiting time (it will only show the last cabin's waiting time)
+//                                   Expanded(
+//                                     child: Container(
+//                                       padding: const EdgeInsets.symmetric(
+//                                           horizontal: 8, vertical: 4),
+//                                       decoration: const BoxDecoration(
+//                                         color: Colors.white,
+//                                         // color: Colors.grey.shade800,
+//                                         // Background color for the container
+//                                         borderRadius: BorderRadius
+//                                             .zero, // Rectangular shape
+//                                       ),
+//                                       height: 72,
+//                                       // Set a fixed height to match the buttons
+//                                       child: Center(
+//                                         child: Text(
+//                                           controller.waitingTimes[
+//                                           selectedCabinId!] ??
+//                                               '0:00',
+//                                           // Display the selected cabin's waiting time
+//                                           style: const TextStyle(
+//                                             color: Colors.black54,
+//                                             fontSize: 14,
+//                                             fontWeight: FontWeight.bold,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                   // First Elevated Button
+//                                   Expanded(
+//                                     child: ElevatedButton(
+//                                       onPressed: () {
+//                                         escalateCabinId = selectedCabinId;
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor:
+//                                         Colors.deepPurple,
+//                                         // Set the background color of the button
+//                                         shape:
+//                                         const RoundedRectangleBorder(
+//                                           borderRadius: BorderRadius
+//                                               .zero, // Rectangular shape
+//                                         ),
+//                                       ),
+//                                       child: Padding(
+//                                         padding:
+//                                         const EdgeInsets.all(8.0),
+//                                         child: Column(
+//                                           mainAxisSize: MainAxisSize.min,
+//                                           // Ensure the column takes minimal space, but can expand if needed
+//                                           mainAxisAlignment:
+//                                           MainAxisAlignment.start,
+//                                           // Align the content to the top of the button
+//                                           crossAxisAlignment:
+//                                           CrossAxisAlignment.center,
+//                                           // Center the content horizontally
+//                                           children: [
+//                                             // Image from assets
+//                                             Image.asset(
+//                                               'assets/icon/ex.jpeg',
+//                                               // Path to your image
+//                                               width: 36,
+//                                               // Set the size of the image to match your desired icon size
+//                                               height: 36,
+//                                             ),
+//                                             const SizedBox(height: 4),
+//                                             // Space between icon and text
+//                                             const Text("Escalate",
+//                                                 style: TextStyle(
+//                                                   fontSize: 12,
+//                                                   color: Colors
+//                                                       .white, // Text color
+//                                                 )),
+//                                             // Text below the icon
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//
+//                                   // Second Elevated Button
+//                                   Expanded(
+//                                     child: ElevatedButton(
+//                                       onPressed: () {
+//                                         // Set the accepted cabin ID when "Accept" is pressed
+//                                         acceptedCabinId = selectedCabinId;
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: Colors.green,
+//                                         shape:
+//                                         const RoundedRectangleBorder(
+//                                           borderRadius: BorderRadius
+//                                               .zero, // Rectangular shape
+//                                         ),
+//                                       ),
+//                                       child: const Padding(
+//                                         padding: EdgeInsets.all(7.0),
+//                                         child: Column(
+//                                           mainAxisSize: MainAxisSize.max,
+//                                           // Ensures the column takes up full height
+//                                           children: [
+//                                             Icon(Icons.check,
+//                                                 size: 42,
+//                                                 color: Colors.white),
+//                                             // Icon above
+//                                             Text("Accept",
+//                                                 style: TextStyle(
+//                                                     fontSize: 12,
+//                                                     color: Colors.white)),
+//                                             // Text below the icon
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ],
+//                               )
+//                                   : Container(); // Hide the row if no cabin is selected
+//                             }
+//                           },
+//                         ),
+//                       ),
+//                     ],
+//                   );
+//                 }
+//               }),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+///----------------------------------
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
+
+// class HomeView extends GetView<HomeController> {
+//   const HomeView({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final HomeController controller = Get.find<HomeController>();
+//
+//     // Track selected cabin
+//     int? selectedCabinId;
+//     int? acceptedCabinId;
+//     int? escalateCabinId;
+//     return SafeArea(
+//       child: Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Scaffold(
+//           appBar: AppBar(
+//             backgroundColor: Colors.white, // Set the background color to black
+//             toolbarHeight: 150,
+//             flexibleSpace: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Image.asset(
+//                   'assets/images/cmh.png',
+//                   height: 148,
+//
+//                   width: MediaQuery.of(context).size.width,
+//                   fit: BoxFit.fill, // Maintain aspect ratio
+//
+//                 ),
+//               ],
+//             ),
+//           ),
+//           body: SafeArea(
+//             child: Container(
+//               color: Colors.grey,
+//               child: Obx(() {
+//                 if (controller.isLoading.value) {
+//                   return const Center(child: CircularProgressIndicator());
+//                 } else if (controller.cabins.isEmpty) {
+//                   return const Center(
+//                     child: Text(
+//                       "Waiting for patient to call.",
+//                       style: TextStyle(color: Colors.white),
+//                     ),
+//                   );
+//                 } else {
+//                   return Column(
+//                     children: [
+//                       // ListView to display cabins
+//                       Expanded(
+//                         child: ListView.builder(
+//                           itemCount: controller.cabins.length, // Only cabins, no additional row
+//                           itemBuilder: (context, index) {
+//                             final cabin = controller.cabins[index];
+//                             final waitingTime = controller.waitingTimes[cabin.id] ?? '0:00';
+//                             final timeParts = waitingTime.split(':');
+//                             final minutes = int.parse(timeParts[0]);
+//
+//                             //--- Determine the background color based on waiting time
+//                             Color waitingTimeColor;
+//                             if (minutes >= 5) {
+//                               waitingTimeColor = Colors.red; // Red for 5 minutes or more
+//                             } else if (minutes >= 2) {
+//                               waitingTimeColor = Colors.yellow; // Yellow for 2 to 4 minutes
+//                             } else {
+//                               waitingTimeColor = Colors.white; // White for less than 2 minutes
+//                             }
+//
+//                             return Column(
+//                               children: [
+//                                 GestureDetector(
+//                                   onTap: () {
+//
+//                                       selectedCabinId = cabin.id; // Set the selected cabin ID
+//
+//                                   },
+//                                   child: Row(
+//                                     children: [
+//                                       // Left-side bar with dynamic color for hover effect
+//                                       Container(
+//                                         width: 20, // Width of the bar
+//                                         height: 73, // Height of the bar
+//                                         color: waitingTimeColor, // Default color
+//                                       ),
+//                                       // Main container
+//                                       Expanded(
+//                                         child: Container(
+//                                           margin: const EdgeInsets.only(top: 2.0),
+//                                           decoration: BoxDecoration(
+//                                             color: selectedCabinId == cabin.id
+//                                                 ? Colors.lightBlueAccent // Highlight background for selected cabin
+//                                                 : const Color(0xFFebecf0), // Default background color
+//                                             border: Border(
+//                                               top: BorderSide(
+//                                                 color: Colors.grey.shade600,
+//                                                 width: 0.8, // Border width
+//                                               ),
+//                                               bottom: BorderSide(
+//                                                 color: Colors.grey.shade600,
+//                                                 width: 0.8, // Border width
+//                                               ),
+//                                             ),
+//                                           ),
+//                                           child: ListTile(
+//                                             title: Row(
+//                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                                               children: [
+//                                                 // Room and Patient Call Details
+//                                                 Column(
+//                                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                                   children: [
+//                                                     Text(
+//                                                       'Cabin ${cabin.id}',
+//                                                       style: const TextStyle(
+//                                                         color: Colors.black,
+//                                                         fontWeight: FontWeight.bold,
+//                                                         fontSize: 18,
+//                                                       ),
+//                                                     ),
+//                                                     const SizedBox(height: 4),
+//                                                     const Text(
+//                                                       'Patient Call',
+//                                                       style: TextStyle(
+//                                                         color: Colors.blueAccent,
+//                                                         fontSize: 16,
+//                                                       ),
+//                                                     ),
+//                                                   ],
+//                                                 ),
+//                                                 // Waiting Time and Status
+//                                                 Column(
+//                                                   crossAxisAlignment: CrossAxisAlignment.end,
+//                                                   children: [
+//                                                     Text(
+//                                                       waitingTime,
+//                                                       style: TextStyle(
+//                                                         color: selectedCabinId == cabin.id
+//                                                             ? Colors.blueAccent // Highlighted text color
+//                                                             : Colors.black54,
+//                                                         fontSize: 16,
+//                                                         fontWeight: FontWeight.bold,
+//                                                       ),
+//                                                     ),
+//                                                     const SizedBox(height: 4),
+//                                                     Row(
+//                                                       children: [
+//                                                         if (escalateCabinId == cabin.id)
+//                                                           Container(
+//                                                             padding: const EdgeInsets.symmetric(
+//                                                               vertical: 2.0,
+//                                                               horizontal: 6.0,
+//                                                             ),
+//                                                             decoration: BoxDecoration(
+//                                                               color: Colors.red.shade100,
+//                                                               borderRadius: BorderRadius.circular(4.0),
+//                                                             ),
+//                                                             child: const Text(
+//                                                               "Escalated",
+//                                                               style: TextStyle(
+//                                                                 color: Colors.red,
+//                                                                 fontSize: 12,
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                         const SizedBox(width: 4),
+//                                                         if (acceptedCabinId == cabin.id)
+//                                                           Container(
+//                                                             padding: const EdgeInsets.symmetric(
+//                                                               vertical: 2.0,
+//                                                               horizontal: 6.0,
+//                                                             ),
+//                                                             decoration: BoxDecoration(
+//                                                               color: Colors.green.shade100,
+//                                                               borderRadius: BorderRadius.circular(4.0),
+//                                                             ),
+//                                                             child: const Text(
+//                                                               "Accepted",
+//                                                               style: TextStyle(
+//                                                                 color: Colors.green,
+//                                                                 fontSize: 12,
+//                                                               ),
+//                                                             ),
+//                                                           ),
+//                                                       ],
+//                                                     ),
+//                                                   ],
+//                                                 ),
+//                                               ],
+//                                             ),
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                                 // Show the action row below the selected cabin
+//                                 if (selectedCabinId == cabin.id)
+//                                   Column(
+//                                     children: [
+//                                       // Row with waiting time and buttons
+//                                       Row(
+//                                         children: [
+//                                           // Container to show waiting time (it will only show the last cabin's waiting time)
+//                                           Expanded(
+//                                             child: Container(
+//                                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+//                                               decoration: const BoxDecoration(
+//                                                 color: Colors.white,
+//                                                 borderRadius: BorderRadius.zero, // Rectangular shape
+//                                               ),
+//                                               height: 72, // Set a fixed height to match the buttons
+//                                               child: Center(
+//                                                 child: Text(
+//                                                   controller.waitingTimes[selectedCabinId!] ?? '0:00',
+//                                                   style: const TextStyle(
+//                                                     color: Colors.black54,
+//                                                     fontSize: 14,
+//                                                     fontWeight: FontWeight.bold,
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                           // First Elevated Button (Escalate)
+//                                           Expanded(
+//                                             child: ElevatedButton(
+//                                               onPressed: () {
+//
+//                                                   escalateCabinId = selectedCabinId;
+//
+//                                               },
+//                                               style: ElevatedButton.styleFrom(
+//                                                 backgroundColor: Colors.deepPurple,
+//                                                 shape: const RoundedRectangleBorder(
+//                                                   borderRadius: BorderRadius.zero, // Rectangular shape
+//                                                 ),
+//                                               ),
+//                                               child: Padding(
+//                                                 padding: const EdgeInsets.all(8.0),
+//                                                 child: Column(
+//                                                   mainAxisSize: MainAxisSize.min,
+//                                                   mainAxisAlignment: MainAxisAlignment.start,
+//                                                   crossAxisAlignment: CrossAxisAlignment.center,
+//                                                   children: [
+//                                                     Image.asset(
+//                                                       'assets/icon/ex.jpeg',
+//                                                       width: 36,
+//                                                       height: 36,
+//                                                     ),
+//                                                     const SizedBox(height: 4),
+//                                                     const Text("Escalate", style: TextStyle(fontSize: 12, color: Colors.white)),
+//                                                   ],
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                           // Second Elevated Button (Accept)
+//                                           Expanded(
+//                                             child: ElevatedButton(
+//                                               onPressed: () {
+//
+//                                                   acceptedCabinId = selectedCabinId;
+//
+//                                               },
+//                                               style: ElevatedButton.styleFrom(
+//                                                 backgroundColor: Colors.green,
+//                                                 shape: const RoundedRectangleBorder(
+//                                                   borderRadius: BorderRadius.zero, // Rectangular shape
+//                                                 ),
+//                                               ),
+//                                               child: const Padding(
+//                                                 padding: EdgeInsets.all(7.0),
+//                                                 child: Column(
+//                                                   mainAxisSize: MainAxisSize.max,
+//                                                   children: [
+//                                                     Icon(Icons.check, size: 42, color: Colors.white),
+//                                                     Text("Accept", style: TextStyle(fontSize: 12, color: Colors.white)),
+//                                                   ],
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ],
+//                                   ),
+//                               ],
+//                             );
+//                           },
+//                         ),
+//                       ),
+//                     ],
+//                   );
+//                 }
+//               }),
+//             ),
+//           ),
+//
+//
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -146,8 +846,10 @@ class HomeView extends GetView<HomeController> {
 
     // Track selected cabin
     int? selectedCabinId;
-    int? acceptedCabinId;
-    int? escalateCabinId;
+
+    ///A Set is a collection of unique elements. Unlike a list, it does not allow duplicate entries. It is ideal for scenarios where you need to maintain a collection of items and quickly check for membership.
+    final Set<int> acceptedCabinIds = {}; // Track accepted cabins
+    final Set<int> escalatedCabinIds = {}; // Track escalated cabins
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -161,7 +863,8 @@ class HomeView extends GetView<HomeController> {
                 Image.asset(
                   'assets/images/cmh.png',
                   height: 148,
-                  width: MediaQuery.of(context).size.width * 0.99,
+
+                  width: MediaQuery.of(context).size.width,
                   fit: BoxFit.fill, // Maintain aspect ratio
                 ),
               ],
@@ -170,8 +873,6 @@ class HomeView extends GetView<HomeController> {
           body: SafeArea(
             child: Container(
               color: Colors.grey,
-              // color: const Color(0xFFebecf0),
-              // color: const Color(0xFF010101),
               child: Obx(() {
                 if (controller.isLoading.value) {
                   return const Center(child: CircularProgressIndicator());
@@ -188,300 +889,305 @@ class HomeView extends GetView<HomeController> {
                       // ListView to display cabins
                       Expanded(
                         child: ListView.builder(
-                          itemCount: controller.cabins.length + 1,
-                          // Add one for the button row
+                          itemCount: controller.cabins.length,
+                          // Only cabins, no additional row
                           itemBuilder: (context, index) {
-                            if (index < controller.cabins.length) {
-                              final cabin = controller.cabins[index];
-                              final waitingTime =
-                                  controller.waitingTimes[cabin.id] ?? '0:00';
-                              final timeParts = waitingTime.split(':');
-                              final minutes = int.parse(timeParts[0]);
-                              ///--- Determine the background color based on waiting time
-                              Color waitingTimeColor;
-                              if (minutes >= 5) {
-                                waitingTimeColor = Colors.red; // Red for 5 minutes or more
-                              } else if (minutes >= 2) {
-                                waitingTimeColor = Colors.yellow; // Yellow for 2 to 4 minutes
-                              } else {
-                                waitingTimeColor = Colors.white; // White for less than 2 minutes
-                              }
-                              return GestureDetector(
-                                onTap: () {
-                                  // Set the selected cabin when ListTile is clicked
-                                  selectedCabinId = cabin.id;
-                                },
-                                child: Row(
-                                  children: [
-                                    // Left-side white bar outside the main container
-                                    Container(
-                                      width: 20, // Width of the bar
-                                      height: 73, // Height of the bar
-                                      color: waitingTimeColor,// Set the color to white
-                                    ),
+                            final cabin = controller.cabins[index];
+                            final waitingTime =
+                                controller.waitingTimes[cabin.id] ?? '0:00';
+                            final timeParts = waitingTime.split(':');
+                            final minutes = int.parse(timeParts[0]);
 
-                                    // Add a gap between the white bar and the main container
+                            //--- Determine the background color based on waiting time
+                            Color waitingTimeColor;
+                            if (minutes >= 5) {
+                              waitingTimeColor =
+                                  Colors.red; // Red for 5 minutes or more
+                            } else if (minutes >= 2) {
+                              waitingTimeColor =
+                                  Colors.yellow; // Yellow for 2 to 4 minutes
+                            } else {
+                              waitingTimeColor =
+                                  Colors.white; // White for less than 2 minutes
+                            }
 
-
-                                    // Main container
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 2.0),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFebecf0),
-                                          border: Border(
-                                            top: BorderSide(
-                                              color: Colors.grey.shade600,
-                                              // Top border color
-                                              width: 0.8, // Border width
-                                            ),
-                                            bottom: BorderSide(
-                                              color: Colors.grey.shade600,
-                                              // Bottom border color
-                                              width: 0.8, // Border width
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    selectedCabinId =
+                                        cabin.id; // Set the selected cabin ID
+                                  },
+                                  child: Row(
+                                    children: [
+                                      // Left-side bar with dynamic color for hover effect
+                                      Container(
+                                        width: 20, // Width of the bar
+                                        height: 73, // Height of the bar
+                                        color:
+                                            waitingTimeColor, // Default color
+                                      ),
+                                      // Main container
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(top: 2.0),
+                                          decoration: BoxDecoration(
+                                            color: selectedCabinId == cabin.id
+                                                ? Colors
+                                                    .lightBlueAccent // Highlight background for selected cabin
+                                                : const Color(0xFFebecf0),
+                                            // Default background color
+                                            border: Border(
+                                              top: BorderSide(
+                                                color: Colors.grey.shade600,
+                                                width: 0.8, // Border width
+                                              ),
+                                              bottom: BorderSide(
+                                                color: Colors.grey.shade600,
+                                                width: 0.8, // Border width
+                                              ),
                                             ),
                                           ),
-                                          borderRadius: const BorderRadius.only(
-                                              topRight: Radius.circular(10)),
-                                        ),
-                                        child: ListTile(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              // Room and Patient Call Details
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Cabin ${cabin.id}',
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  const Text(
-                                                    'Patient Call',
-                                                    style: TextStyle(
-                                                      color: Colors.blueAccent,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              // Waiting Time and Status
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                    waitingTime,
-                                                    style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
-                                                    children: [
-                                                      if (escalateCabinId == cabin.id)
-                                                      Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 2.0,
-                                                          horizontal: 6.0,
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors
-                                                              .red.shade100,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      4.0),
-                                                        ),
-                                                        child: const Text(
-                                                          "Escalated",
-                                                          style: TextStyle(
-                                                            color: Colors.red,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
+                                          child: ListTile(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                // Room and Patient Call Details
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Cabin ${cabin.id}',
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
                                                       ),
-                                                      const SizedBox(width: 4),
-                                                      // Show "Accepted" only for the accepted cabin
-                                                      if (acceptedCabinId == cabin.id)
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            vertical: 2.0,
-                                                            horizontal: 6.0,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors
-                                                                .green.shade100,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4.0),
-                                                          ),
-                                                          child: const Text(
-                                                            "Accepted",
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.green,
-                                                              fontSize: 12,
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    const Text(
+                                                      'Patient Call',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Colors.blueAccent,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                // Waiting Time and Status
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      waitingTime,
+                                                      style: TextStyle(
+                                                        color: selectedCabinId ==
+                                                                cabin.id
+                                                            ? Colors
+                                                                .blueAccent // Highlighted text color
+                                                            : Colors.black54,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Row(
+                                                      children: [
+                                                        if (escalatedCabinIds
+                                                            .contains(cabin.id))
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              vertical: 2.0,
+                                                              horizontal: 6.0,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .red.shade100,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4.0),
+                                                            ),
+                                                            child: const Text(
+                                                              "Escalated",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                        const SizedBox(
+                                                            width: 4),
+                                                        if (acceptedCabinIds
+                                                            .contains(cabin.id))
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              vertical: 2.0,
+                                                              horizontal: 6.0,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .green
+                                                                  .shade100,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4.0),
+                                                            ),
+                                                            child: const Text(
+                                                              "Accepted",
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .green,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              );
-                            } else {
-                              // This is the last item (the row with buttons)
-                              return selectedCabinId != null
-                                  ? Row(
-                                      children: [
-                                        // Container to show waiting time (it will only show the last cabin's waiting time)
-                                        Expanded(
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 4),
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              // color: Colors.grey.shade800,
-                                              // Background color for the container
-                                              borderRadius: BorderRadius
-                                                  .zero, // Rectangular shape
-                                            ),
-                                            height: 72,
-                                            // Set a fixed height to match the buttons
-                                            child: Center(
-                                              child: Text(
-                                                controller.waitingTimes[
-                                                        selectedCabinId!] ??
-                                                    '0:00',
-                                                // Display the selected cabin's waiting time
-                                                style: const TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
+                                // Show the action row below the selected cabin
+                                if (selectedCabinId == cabin.id)
+                                  Column(
+                                    children: [
+                                      // Row with waiting time and buttons
+                                      Row(
+                                        children: [
+                                          // Container to show waiting time (it will only show the last cabin's waiting time)
+                                          Expanded(
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius
+                                                    .zero, // Rectangular shape
+                                              ),
+                                              height: 72,
+                                              // Set a fixed height to match the buttons
+                                              child: Center(
+                                                child: Text(
+                                                  controller.waitingTimes[
+                                                          selectedCabinId!] ??
+                                                      '0:00',
+                                                  style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        // First Elevated Button
-                                        Expanded(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-
-                                              escalateCabinId = selectedCabinId;
-
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.deepPurple,
-                                              // Set the background color of the button
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius
-                                                    .zero, // Rectangular shape
+                                          // First Elevated Button (Escalate)
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                escalatedCabinIds
+                                                    .add(selectedCabinId!);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.deepPurple,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius
+                                                      .zero, // Rectangular shape
+                                                ),
                                               ),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                // Ensure the column takes minimal space, but can expand if needed
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                // Align the content to the top of the button
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                // Center the content horizontally
-                                                children: [
-                                                  // Image from assets
-                                                  Image.asset(
-                                                    'assets/icon/ex.jpeg',
-                                                    // Path to your image
-                                                    width: 36,
-                                                    // Set the size of the image to match your desired icon size
-                                                    height: 36,
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  // Space between icon and text
-                                                  const Text("Escalate",
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors
-                                                            .white, // Text color
-                                                      )),
-                                                  // Text below the icon
-                                                ],
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                      'assets/icon/ex.jpeg',
+                                                      width: 36,
+                                                      height: 36,
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    const Text("Escalate",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white)),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-
-                                        // Second Elevated Button
-                                        Expanded(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              // Set the accepted cabin ID when "Accept" is pressed
-                                              acceptedCabinId = selectedCabinId;
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.green,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius
-                                                    .zero, // Rectangular shape
+                                          // Second Elevated Button (Accept)
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                acceptedCabinIds
+                                                    .add(selectedCabinId!);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius
+                                                      .zero, // Rectangular shape
+                                                ),
                                               ),
-                                            ),
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(7.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                // Ensures the column takes up full height
-                                                children: [
-                                                  Icon(Icons.check,
-                                                      size: 42,
-                                                      color: Colors.white),
-                                                  // Icon above
-                                                  Text("Accept",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white)),
-                                                  // Text below the icon
-                                                ],
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(7.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Icon(Icons.check,
+                                                        size: 42,
+                                                        color: Colors.white),
+                                                    Text("Accept",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white)),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  : Container(); // Hide the row if no cabin is selected
-                            }
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            );
                           },
                         ),
                       ),
