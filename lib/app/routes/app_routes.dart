@@ -7,6 +7,7 @@ abstract class Routes {
   static const LandingPage = _Paths.LandingPage;
   static const HOME = _Paths.HOME;
   static const splashScreen = _Paths.splashScreen;
+  static const NurseCall = _Paths.NurseCall;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const splashScreen = '/splashScreen';
   static const SignInPage = '/SignInPage';
   static const LandingPage = '/LandingPage';
+  static const NurseCall = '/NurseCall';
 }

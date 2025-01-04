@@ -5,12 +5,16 @@ import 'package:get/get.dart';
 import 'package:get_cli_tutorial/app/modules/home/controllers/SIgnInViewController.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'app/modules/nurseCall/bindings/nurse_call_binding.dart';
+import 'app/modules/nurseCall/controllers/nurse_call_controller.dart';
 import 'app/routes/app_pages.dart';
 
 Future<void> main() async {
+   WidgetsFlutterBinding.ensureInitialized();
+
   await GetStorage.init(); // Initialize GetStorage
 
-  Get.put(SignInViewController());
+   Get.put(NurseCallController());
   AwesomeNotifications().initialize(
       null,
       [
@@ -30,6 +34,7 @@ Future<void> main() async {
       title: "Application",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+
     ),
   );
 }
