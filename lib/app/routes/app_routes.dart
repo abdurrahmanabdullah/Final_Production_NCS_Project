@@ -3,7 +3,7 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
-  static const SignInPage = _Paths.SignInPage;
+  static const SignInViewPage = _Paths.SignInViewPage;
   static const LandingPage = _Paths.LandingPage;
   static const HOME = _Paths.HOME;
   static const splashScreen = _Paths.splashScreen;
@@ -14,7 +14,7 @@ abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
   static const splashScreen = '/splashScreen';
-  static const SignInPage = '/SignInPage';
+  static const SignInViewPage = '/SignInViewPage';
   static const LandingPage = '/LandingPage';
   static const NurseCall = '/NurseCall';
 }

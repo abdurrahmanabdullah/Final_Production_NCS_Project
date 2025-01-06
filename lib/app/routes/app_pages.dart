@@ -1,6 +1,6 @@
 // import 'package:get/get.dart';
 // import 'package:get_cli_tutorial/app/modules/home/views/landingpageView.dart';
-// import 'package:get_cli_tutorial/app/modules/home/views/signinView.dart';
+// import 'package:get_cli_tutorial/app/modules/home/views/signinViewPage.dart';
 // import 'package:get_cli_tutorial/app/modules/home/views/splash_screen_view.dart';
 //
 // import '../modules/home/bindings/home_binding.dart';
@@ -44,6 +44,7 @@ import 'package:get_cli_tutorial/app/modules/home/views/signinView.dart';
 import 'package:get_cli_tutorial/app/modules/home/views/splash_screen_view.dart';
 import 'package:get_cli_tutorial/app/modules/nurseCall/bindings/nurse_call_binding.dart';
 import 'package:get_cli_tutorial/app/modules/nurseCall/views/nurse_call_view.dart';
+import 'package:get_cli_tutorial/app/modules/nurseCall/views/signinViewPage.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -53,7 +54,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.NurseCall;
+  static const INITIAL = Routes .NurseCall;
   // static const INITIAL = Routes.splashScreen;
 
   static final routes = [
@@ -64,7 +65,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.NurseCall,
-      page: () => const NurseCallView(),
+      page: () =>  NurseCallView(),
       binding: NurseCallBinding(),
     ),
     GetPage(
@@ -73,9 +74,9 @@ class AppPages {
       binding: HomeBinding(),
     ),
     GetPage(
-      name: _Paths.SignInPage,
-      page: () => const SignInView(),
-      binding: HomeBinding(),
+      name: _Paths.SignInViewPage,
+      page: () => const SignInViewPage(),
+      binding: NurseCallBinding(),
     ),
 
   ];
