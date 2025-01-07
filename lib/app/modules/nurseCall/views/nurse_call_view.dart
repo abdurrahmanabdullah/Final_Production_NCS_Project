@@ -37,7 +37,7 @@ class NurseCallView extends GetView<NurseCallController> {
           ),
           body: SafeArea(
             child: Container(
-              color: Colors.grey,
+              // color: Colors.grey,
               child: Obx(() {
                 return Column(
                   children: [
@@ -48,6 +48,7 @@ class NurseCallView extends GetView<NurseCallController> {
                         // Only cabins, no additional row
                         itemBuilder: (context, index) {
                           int? remoteId = nurseController.remoteIds[index];
+                          String? name = nurseController.name[index];
                           String createdAt = nurseController.createdAt[index];
 
                           return Column(
@@ -61,10 +62,11 @@ class NurseCallView extends GetView<NurseCallController> {
                                 },
                                 child: Row(
                                   children: [
-                                    // Left-side bar with dynamic color for hover effect
                                     Container(
                                       width: 20, // Width of the bar
                                       height: 73, // Height of the bar
+                                      color:Colors.red
+                                     // Default color
                                     ),
                                     // Main container
                                     Expanded(
@@ -93,8 +95,9 @@ class NurseCallView extends GetView<NurseCallController> {
                                                 crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                                 children: [
+
                                                   Text(
-                                                    'Cabin: $remoteId',
+                                                     '$name',
                                                     style: const TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
